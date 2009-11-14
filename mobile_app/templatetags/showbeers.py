@@ -9,7 +9,7 @@ register = template.Library()
 def list_beers(beers, type):
     str = '<h2>' + type + ' Beers</h2><ul>'
     for beer in beers:
-        key = "%s" % beer.key()
-        str += '<li><a href="/beer/' + key + '">' + beer.name + '</a></li>'
+        id = "%s" % beer.id
+        str += '<li><a href="/beer/' + id + '">' + beer.name + '</a></li>'
     str += '</ul>'
     return mark_safe(str)
