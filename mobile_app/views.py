@@ -66,7 +66,7 @@ def Index(request):
         # FIXME: This template sucks b/c it has 4 loops that are duplicates
         return render_to_response('index.html', template_values)
 
-def Update(request):
+def Update(request, start=None, fetch=None):
     if request.method == 'GET':
         ids = []
         ii = 0
@@ -99,9 +99,9 @@ def Update(request):
 
             jj = 0
             for det in details:
-                tmp = Beer(name=beers[jj]['name'], type=beers[jj]['type'],
+                b = Beer(name=beers[jj]['name'], type=beers[jj]['type'],
                             style=det['Style:'], descr=det['Description:'])
-                db.put(tmp)
+                b.save()
                 jj += 1
 
             added += num_details
