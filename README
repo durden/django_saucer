@@ -1,0 +1,1 @@
+Simple Django application to view current beers at the Flying Saucer Houston location.  The application depends on my custom saucer api for getting the beers, etc.  Message me if you would like to see it and/or use it.
