@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+    <link rel="stylesheet" href="/smedia/css/style.css" />
+    <title>{% block title %}Mobile Saucer{% endblock %}</title>
+</head>
+<body>
+	<ul id="topnav">
+	    <li><a href="/">Home</a></li>
+	    <li><a href="/cask/">Cask</a></li>
+	    <li><a href="/can/">Can</a></li>
+	    <li><a href="/draft/">Draft</a></li>
+	    <li><a href="/bottle/">Bottle</a></li>
+	    <li><a href="/search">Search</a></li>
+	</ul>
+	<br style="clear"/>
+	<div id="content">
+		{% block content %}{% endblock %}
+	</div>
+	<!--<div id="footer">
+		{% block footer %}footer{% endblock %}
+	</div>-->
+</body>
+</html>
+

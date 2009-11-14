@@ -1,0 +1,12 @@
+from django.db import models
+
+class Beer(models.Model):
+    name = models.CharField(max_length=100)
+    type = models.CharField(max_length=100)
+    style = models.CharField(max_length=100)
+    descr = models.TextField()
+    date = models.DateField(auto_now=True)
+
+    #def __str__(self):
+    #    return "%s (%s):\n    %s\n    %s" % (self.name, self.type,
+    #                                        self.style, self.descr)

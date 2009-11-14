@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% load showbeers %}
+
+{% block content %}
+    <h1>Current Beers</h1>
+    {{ beers.casks|list_beers:"Cask" }}
+    {{ beers.drafts|list_beers:"Draft" }}
+    {{ beers.cans|list_beers:"Can" }}
+    {{ beers.bottles|list_beers:"Bottle" }}
+{% endblock %}

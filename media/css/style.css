@@ -1,0 +1,98 @@
+/****************************************************
+				MAIN STRUCTURE
+****************************************************/
+body {
+	margin: 0px;
+	padding: 0px;
+    -webkit-text-size-adjust: none;
+}
+
+h1 {
+    font-size: 24px;
+    padding: 0px;
+    margin: 0px 0px 20px 0px;
+}
+
+h2 {
+    font-size: 22px;
+    padding: 0px;
+    margin: 10px 0px 10px 0px;
+}
+
+#topnav {
+	background-color: #3b3b3b;
+	margin: 0px;
+	border: 1px solid #000000;
+	color: #ffffff;
+	padding: 5px 0px 10px 5px;
+}
+
+#topnav a:active, #topnav a:link, #topnav a:visited {
+	color: #ffffff;
+}
+
+#topnav a:hover {
+	color: #d2d2d2;
+}
+
+#topnav li {
+	list-style-type: none;
+	display: inline;
+	margin: 0px 10px 0px 0px;
+}
+
+#content {
+	margin: .5em;
+}
+
+#content ul {
+    width: 99%;
+    padding: 0px 0px 10px 0px;
+}
+
+#content ul li a {
+    display: block;
+    background: url('/img/iPhoneArrow.png') no-repeat right center;
+    padding-right: 30px;
+}
+
+#content ul li a {
+    color: #3366ff;
+    font-weight: bold;
+}
+
+#content ul li a.active, #content u li a.hover, #content u li a.visited {
+    color: #33ff66;
+    font-weight: bold;
+}
+
+#content ul li {
+    width: 99%;
+    margin: 0px;
+    padding: 5px;
+    list-style-type: none;
+    border-bottom: 1px #1e1e1e solid; 
+    font-size: 20px;
+}
+
+#footer {
+	margin: 10px 0px 10px 0px;
+	border: 1px solid #000000;
+}
+
+/****************************************************
+				FORMS
+****************************************************/
+/*fieldset {width: 30em;}
+
+p.submit {
+	top: 5em;
+}
+
+fieldset p label {
+	float: left;
+	display: block;
+	margin: 0em 1em 0em 0em;
+}
+
+.clear {clear: both}*/

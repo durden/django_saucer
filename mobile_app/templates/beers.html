@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{ search }} Beers</h1>
+    {% for beer in beers %}
+        {% if forloop.first %}
+            <ul>
+        {% endif %}
+
+        <li><a href="/beer/{{ beer.key }}">{{ beer.name }}</a></li>
+
+        {% if forloop.last %}
+            </ul>
+        {% endif %}
+
+    {% ifequal beers|length 0 %}
+        <p>Sorry, couldn't find that beer. Search again.</p>
+    {% endifequal %}
+
+    {% endfor %}
+{% endblock %}
