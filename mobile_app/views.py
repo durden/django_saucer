@@ -113,11 +113,11 @@ def Update(request, start=None, fetch=None):
                             'start' : start, 'requested' : fetch}
         return render_to_response('update.html', template_values)
 
-def BrewDetail(request, br):
+def BrewDetail(request, b):
     if request.method == 'GET':
         try:
-            beer = Beer.objects.get(beer)
-        except models.DoesNotExist:
+            beer = Beer.objects.get(id=b)
+        except DoesNotExist:
             beer = None
 
         template_values = {'beer' : beer}
