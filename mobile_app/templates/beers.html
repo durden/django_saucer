@@ -7,15 +7,16 @@
             <ul>
         {% endif %}
 
-        <li><a href="/beer/{{ beer.key }}">{{ beer.name }}</a></li>
+        <li><a href="/beer/{{ beer.id }}">{{ beer.name }}</a></li>
 
         {% if forloop.last %}
             </ul>
         {% endif %}
 
-    {% ifequal beers|length 0 %}
-        <p>Sorry, couldn't find that beer. Search again.</p>
-    {% endifequal %}
-
     {% endfor %}
+
+    {% if not beers %}
+        <p>Sorry couldn't find {{requested}}. Search again.</p>
+    {% endif %}
+
 {% endblock %}

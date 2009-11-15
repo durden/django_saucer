@@ -117,13 +117,13 @@ def BrewDetail(request, b):
     if request.method == 'GET':
         try:
             beer = Beer.objects.get(id=b)
-        except DoesNotExist:
+        except Beer.DoesNotExist:
             beer = None
 
         template_values = {'beer' : beer}
         return render_to_response('beer_details.html', template_values)
 
-def Search(request):
+def Search(request, style=None):
     if request.method == 'GET':
         if style is not None and len(style) > 0:
 
@@ -141,7 +141,7 @@ def Search(request):
 
         # Use a list to preserve ordering
         styles = []
-        tmp = __weekly_brews__(Beer.all())
+        tmp = __weekly_brews__(Beer.objects.all())
 
         for beer in tmp:
             styles.append(beer.style)
@@ -152,12 +152,13 @@ def Search(request):
         return render_to_response('search.html', template_values)
 
     else:
-        name = request.get('name')
+        name = request.POST.get('name', None)
 
-        if name is None or not len(name):
-            self.redirect("/search")
-            return
-        beers = __weekly_brews__(Beer.all().filter("name = ", name))
+        #if name is None or not len(name):
+        #    self.redirect("/search")
+        #    return
 
-        template_values = {'beers' : beers}
+        beers = Beer.objects.filter(name=name)
+
+        template_values = {'beers' : beers, 'requested' : name}
         return render_to_response('beers.html', template_values)
