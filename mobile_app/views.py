@@ -17,33 +17,25 @@ next = today + week
 def __weekly_brews__(query):
     return query.filter(date__gte=last).filter(date__lt=next).order_by("date")
 
-#class BrewHandler(request):
-    # FIXME: Better way to do this?
-#    def type(self):
-#        return None
-
-#    if request.method == 'GET':
-#        beers = __weekly_brews__(Beer.objects.filter(type=self.type())).order_by("name")
-#        template_values = {'beers' : beers, 'type' : self.type()}
+def TypeHandler(request, type):
+    if request.method == 'GET':
+        beers = __weekly_brews__(Beer.objects.filter(type=type)).order_by("name")
+        template_values = {'beers' : beers, 'type' : type}
 
         # FIXME: This template sucks b/c it has 4 loops that are duplicates
-#        return render_to_response('type.html', template_values)
+        return render_to_response('type.html', template_values)
 
-#def CanHandler(BrewHandler):
-#    def type(self):
-#        return "Can"
+def Can(request):
+    return TypeHandler(request, "Can")
 
-#def CaskHandler(BrewHandler):
-#    def type(self):
-#        return "Cask"
+def Cask(request):
+    return TypeHandler(request, "Cask")
 
-#def DraftHandler(BrewHandler):
-#    def type(self):
-#        return "Draft"
+def Draft(request):
+    return TypeHandler(request, "Draft")
 
-#def BottleHandler(BrewHandler):
-#    def type(self):
-#        return "Bottle"
+def Bottle(request):
+    return TypeHandler(request, "Bottle")
 
 def Index(request):
     if request.method == 'GET':
