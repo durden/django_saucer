@@ -7,15 +7,18 @@ from django.shortcuts import render_to_response
 from models import Beer
 from saucer_api.saucer import Saucer
 
-today = datetime.date.today()
-today = datetime.date.today()
-week = datetime.timedelta(weeks=1)
-last = today - week
-next = today + week
+# Run from Monday - Sunday (Inclusive)
+start = datetime.date.today()
+day = datetime.timedelta(days=1)
+
+while start.weekday() != 0:
+    start -= day
+
+end = start + datetime.timedelta(days=6)
 
 # Helper function for sorting weekly brews
 def __weekly_brews__(query):
-    return query.filter(date__gte=last).filter(date__lt=next).order_by("date")
+    return query.filter(date__range=(start, end)).order_by("date")
 
 def TypeHandler(request, type):
     if request.method == 'GET':
