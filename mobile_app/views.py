@@ -40,7 +40,7 @@ def New(request):
     if request.method == 'GET':
         start, end = __getCurrentWeek__()
         beers = Beer.objects.filter(date__range=(start, end),
-                                avail=True).order_by("name").order_by("date")
+                                    avail=True).order_by("name")
 
         template_values = {'beers' : beers, 'type' : 'New'}
         return render_to_response('type.html', template_values)
