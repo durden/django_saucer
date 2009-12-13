@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p>Retired {{ retired|length }} beers</p>
+    <ul>
+    {% for b in retired %}
+        <li>{{ b.name }} - {{ b.type }}</li>
+    {% endfor %}
+    </ul>
+    <p>Beers retired,  <a href="/">go check out all available</a>.</p>
+{% endblock %}
+

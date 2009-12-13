@@ -9,6 +9,7 @@ from django.conf import settings
 urlpatterns = patterns('',
     ('^$', Index),
     (r'^update/(\d+)/(\d+)', Update),
+    (r'^retire/', Retire),
     (r'^beer/(.*)', BrewDetail),
     (r'^search/*(.*)', Search),
     (r'^cask/', Cask),
