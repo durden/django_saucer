@@ -17,12 +17,12 @@ while start.weekday() != 0:
 end = start + datetime.timedelta(days=6)
 
 # Helper function for sorting weekly brews
-def __weekly_brews__(query):
-    return query.filter(date__range=(start, end)).order_by("date")
+def __weekly_brews__(type):
+    return Beer.objects.filter(date__range=(start, end), type=type).order_by("date").order_by("name")
 
 def TypeHandler(request, type):
     if request.method == 'GET':
-        beers = __weekly_brews__(Beer.objects.filter(type=type)).order_by("name")
+        beers = __weekly_brews__(type)
         template_values = {'beers' : beers, 'type' : type}
 
         # FIXME: This template sucks b/c it has 4 loops that are duplicates
@@ -42,13 +42,10 @@ def Bottle(request):
 
 def Index(request):
     if request.method == 'GET':
-        # Have to filter name afterwards b/c datastore requires the inequality
-        # operators to have a order FIRST if there is going to be any order
-        # clauses at all (see datastore docs)
-        drafts = __weekly_brews__(Beer.objects.filter(type="Draft")).order_by("name")
-        bottles = __weekly_brews__(Beer.objects.filter(type="Bottle")).order_by("name")
-        cans = __weekly_brews__(Beer.objects.filter(type="Can")).order_by("name")
-        casks = __weekly_brews__(Beer.objects.filter(type="Cask")).order_by("name")
+        drafts = __weekly_brews__("Draft")
+        bottles = __weekly_brews__("Bottle")
+        cans = __weekly_brews__("Can")
+        casks = __weekly_brews__("Cask")
 
         beers = {}
         beers['drafts'] = drafts
