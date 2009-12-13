@@ -4,7 +4,6 @@
 
 {% block content %}
     <h1>Current Beers</h1>
-    {{ beers.new|list_beers:"New" }}
     {{ beers.casks|list_beers:"Cask" }}
     {{ beers.drafts|list_beers:"Draft" }}
     {{ beers.cans|list_beers:"Can" }}

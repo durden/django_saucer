@@ -7,12 +7,21 @@ from django.shortcuts import render_to_response
 from models import Beer
 from saucer_api.saucer import Saucer
 
+def __getCurrentWeek__():
+    # Run from Monday - Sunday (Inclusive)
+    start = datetime.date.today()
+    day = datetime.timedelta(days=1)
+
+    while start.weekday() != 0:
+        start -= day
+
+    end = start + datetime.timedelta(days=6)
+    return (start, end)
+
 def TypeHandler(request, type):
     if request.method == 'GET':
         beers = Beer.objects.filter(type=type, avail=True)
         template_values = {'beers' : beers, 'type' : type}
-
-        # FIXME: This template sucks b/c it has 4 loops that are duplicates
         return render_to_response('type.html', template_values)
 
 def Can(request):
@@ -27,20 +36,17 @@ def Draft(request):
 def Bottle(request):
     return TypeHandler(request, "Bottle")
 
+def New(request):
+    if request.method == 'GET':
+        start, end = __getCurrentWeek__()
+        beers = Beer.objects.filter(date__range=(start, end),
+                                avail=True).order_by("name").order_by("date")
+
+        template_values = {'beers' : beers, 'type' : 'New'}
+        return render_to_response('type.html', template_values)
+
 def Index(request):
     if request.method == 'GET':
-        # Run from Monday - Sunday (Inclusive)
-        start = datetime.date.today()
-        day = datetime.timedelta(days=1)
-
-        while start.weekday() != 0:
-            start -= day
-
-        end = start + datetime.timedelta(days=6)
-
-        new = Beer.objects.filter(date__range=(start, end),
-                                avail=True).order_by("date").order_by("name")
-
         drafts = Beer.objects.filter(type="Draft", avail=True).order_by("name")
         bottles = Beer.objects.filter(type="Bottle", avail=True).order_by("name")
         cans = Beer.objects.filter(type="Can", avail=True).order_by("name")
@@ -51,7 +57,6 @@ def Index(request):
         beers['bottles'] = bottles
         beers['cans'] = cans
         beers['casks'] = casks
-        beers['new'] = new
 
         template_values = {'beers' : beers}
 
