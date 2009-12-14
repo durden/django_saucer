@@ -7,6 +7,7 @@ class Beer(models.Model):
     descr = models.TextField()
     date = models.DateField(auto_now=True)
     avail = models.BooleanField()
-    #def __str__(self):
-    #    return "%s (%s):\n    %s\n    %s" % (self.name, self.type,
-    #                                        self.style, self.descr)
+
+    def __str__(self):
+        return "%s (%s): Style:%s Avail:%s" % (self.name, self.type,
+                                            self.style, self.avail)
