@@ -123,7 +123,7 @@ def Update(request, start=None, fetch=None):
             for det in details:
                 _type = beers[jj]['type']
                 _name = beers[jj]['name']
-                curr_beer = Beer.objects.filter(type=_type, name=_name)
+                curr_beer = Beer.objects.get(type=_type, name=_name)
 
                 # Beer already in db, but maybe it's newly available
                 if curr_beer:
