@@ -173,7 +173,7 @@ def Search(request, style=None):
 
             # Find all the styles by creating a set from all beers b/c
             # app engine won't let us grab just this column from a table
-            beers = Beer.objects.filter(style=style).order_by("name")
+            beers = Beer.objects.filter(style=style, avail=True).order_by("name")
 
             template_values = {'beers' : beers, 'search' : style}
             return render_to_response('beers.html', template_values)
