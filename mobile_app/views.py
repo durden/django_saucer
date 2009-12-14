@@ -123,7 +123,12 @@ def Update(request, start=None, fetch=None):
             for det in details:
                 _type = beers[jj]['type']
                 _name = beers[jj]['name']
-                curr_beer = Beer.objects.get(type=_type, name=_name)
+
+                # Maybe we don't find it
+                try:
+                    curr_beer = Beer.objects.filter(type=_type, name=_name)[0]
+                except IndexError:
+                    curr_beer = None
 
                 # Beer already in db, but maybe it's newly available
                 if curr_beer:
@@ -137,6 +142,7 @@ def Update(request, start=None, fetch=None):
                     b.save()
                 jj += 1
 
+            # FIXME: Incorrect counting now b/c we don't always add
             added += num_details
             ii += skip
             ids = []
