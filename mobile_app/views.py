@@ -45,6 +45,15 @@ def New(request):
         template_values = {'beers' : beers, 'type' : 'New'}
         return render_to_response('type.html', template_values)
 
+def Retired(request):
+    if request.method == 'GET':
+        start, end = __getCurrentWeek__()
+        beers = Beer.objects.filter(date__range=(start, end),
+                                    avail=False).order_by("name")
+
+        template_values = {'beers' : beers, 'type' : 'Retired'}
+        return render_to_response('type.html', template_values)
+
 def Index(request):
     if request.method == 'GET':
         drafts = Beer.objects.filter(type="Draft", avail=True).order_by("name")
