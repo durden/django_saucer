@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 from models import Beer
 from saucer_api.saucer import Saucer
 
-def __getCurrentWeek__():
+def __getCurrentWeek():
     # Run from Monday - Sunday (Inclusive)
     start = datetime.date.today()
     day = datetime.timedelta(days=1)
@@ -38,7 +38,7 @@ def Bottle(request):
 
 def New(request):
     if request.method == 'GET':
-        start, end = __getCurrentWeek__()
+        start, end = __getCurrentWeek()
         beers = Beer.objects.filter(date__range=(start, end),
                                     avail=True).order_by("name")
 
@@ -46,8 +46,9 @@ def New(request):
         return render_to_response('type.html', template_values)
 
 def Retired(request):
+    x = 1
     if request.method == 'GET':
-        start, end = __getCurrentWeek__()
+        start, end = __getCurrentWeek()
         beers = Beer.objects.filter(date__range=(start, end),
                                     avail=False).order_by("name")
 
@@ -76,7 +77,7 @@ def Retire(request):
     # Get all beers from saucer site and compare them with currently available
     # beers from our db
     saucer = Saucer()
-    saucer_beers = saucer.getAllBeers()
+    saucer_beers = saucer.get_all_beers()
     db_beers = Beer.objects.filter(avail=True)
     retired = []
 
@@ -86,8 +87,8 @@ def Retire(request):
         for saucer_beer in saucer_beers:
             if saucer_beer['name'] == db_beer.name and\
                 saucer_beer['type'] == db_beer.type:
-                    found = True
-                    break
+                found = True
+                break
 
         if not found:
             db_beer.avail = False
@@ -104,8 +105,7 @@ def Update(request, start=None, fetch=None):
         added = 0
         skip = 10
         saucer = Saucer()
-        saucer.reset_stats()
-        all_beers = saucer.getAllBeers()
+        all_beers = saucer.get_all_beers()
         num_beers = len(all_beers)
 
         if fetch is not None:
@@ -123,7 +123,7 @@ def Update(request, start=None, fetch=None):
             for beer in beers:
                 ids.append(beer['id'])
 
-            details = saucer.getBeerDetails(ids)
+            details = saucer.get_beer_details(ids)
             num_details = len(details)
             if not num_details:
                 break
@@ -156,8 +156,8 @@ def Update(request, start=None, fetch=None):
             ii += skip
             ids = []
 
-        template_values = {'fetch' : Saucer.fetch, 'san' : Saucer.san,
-                            'details' : Saucer.create_details, 'added' : added,
+        template_values = {'fetch' : saucer.fetch, 'san' : saucer.san,
+                            'details' : saucer.create_details, 'added' : added,
                             'start' : start, 'requested' : fetch}
         return render_to_response('update.html', template_values)
 
