@@ -1,4 +1,5 @@
-import os
+"""Views methods for saucer app"""
+
 import re
 import datetime
 
@@ -7,8 +8,10 @@ from django.shortcuts import render_to_response
 from models import Beer
 from saucer_api.saucer import Saucer
 
-def __getCurrentWeek():
-    # Run from Monday - Sunday (Inclusive)
+def __get_current_week():
+    """Find start/end dates of current week, Monday - Sunday (inclusive) and
+    return as tuple"""
+
     start = datetime.date.today()
     day = datetime.timedelta(days=1)
 
@@ -18,27 +21,35 @@ def __getCurrentWeek():
     end = start + datetime.timedelta(days=6)
     return (start, end)
 
-def type_handler(request, type):
+def type_handler(request, req_type):
+    """Find all beers with serving type equal to 'req_type' and display"""
+
     if request.method == 'GET':
-        beers = Beer.objects.filter(type=type, avail=True).order_by("name")
-        template_values = {'beers' : beers, 'type' : type}
+        beers = Beer.objects.filter(type=req_type, avail=True).order_by("name")
+        template_values = {'beers' : beers, 'type' : req_type}
         return render_to_response('type.html', template_values)
 
 def can(request):
+    """Show all can beers"""
     return type_handler(request, "Can")
 
 def cask(request):
+    """Show all cask beers"""
     return type_handler(request, "Cask")
 
 def draft(request):
+    """Show all draft beers"""
     return type_handler(request, "Draft")
 
 def bottle(request):
+    """Show all bottle beers"""
     return type_handler(request, "Bottle")
 
 def new(request):
+    """Show all beers that were first available during current week"""
+
     if request.method == 'GET':
-        start, end = __getCurrentWeek()
+        start, end = __get_current_week()
         beers = Beer.objects.filter(date__range=(start, end),
                                     avail=True).order_by("name")
 
@@ -46,9 +57,10 @@ def new(request):
         return render_to_response('type.html', template_values)
 
 def retired(request):
-    x = 1
+    """Show all beers that were discontinued/retired during current week"""
+
     if request.method == 'GET':
-        start, end = __getCurrentWeek()
+        start, end = __get_current_week()
         beers = Beer.objects.filter(date__range=(start, end),
                                     avail=False).order_by("name")
 
@@ -56,49 +68,52 @@ def retired(request):
         return render_to_response('type.html', template_values)
 
 def index(request):
+    """Show all currently available beers sorted by serving type"""
+
     if request.method == 'GET':
         drafts = Beer.objects.filter(type="Draft", avail=True).order_by("name")
-        bottles = Beer.objects.filter(type="Bottle", avail=True).order_by("name")
+        btls = Beer.objects.filter(type="Bottle", avail=True).order_by("name")
         cans = Beer.objects.filter(type="Can", avail=True).order_by("name")
         casks = Beer.objects.filter(type="Cask", avail=True).order_by("name")
 
         beers = {}
         beers['drafts'] = drafts
-        beers['bottles'] = bottles
+        beers['bottles'] = btls
         beers['cans'] = cans
         beers['casks'] = casks
 
         template_values = {'beers' : beers}
-
-        # FIXME: This template sucks b/c it has 4 loops that are duplicates
         return render_to_response('index.html', template_values)
 
 def retire(request):
-    # Get all beers from saucer site and compare them with currently available
-    # beers from our db
-    saucer = Saucer()
-    saucer_beers = saucer.get_all_beers()
-    db_beers = Beer.objects.filter(avail=True)
-    retired = []
+    """Retire all beers currently available in our db and not saucer site"""
 
-    for db_beer in db_beers:
-        found = False
-        # Look for db beer in list of dictionaries
-        for saucer_beer in saucer_beers:
-            if saucer_beer['name'] == db_beer.name and\
-                saucer_beer['type'] == db_beer.type:
-                found = True
-                break
+    if request.method == 'GET':
+        saucer = Saucer()
+        saucer_beers = saucer.get_all_beers()
+        db_beers = Beer.objects.filter(avail=True)
+        retired_beers = []
 
-        if not found:
-            db_beer.avail = False
-            db_beer.save()
-            retired.append(db_beer)
+        for db_beer in db_beers:
+            found = False
+            for saucer_beer in saucer_beers:
+                if saucer_beer['name'] == db_beer.name and\
+                    saucer_beer['type'] == db_beer.type:
+                    found = True
+                    break
 
-    template_values = {'retired': retired}
-    return render_to_response('retire.html', template_values)
+            if not found:
+                db_beer.avail = False
+                db_beer.save()
+                retired_beers.append(db_beer)
+
+        template_values = {'retired': retired_beers}
+        return render_to_response('retire.html', template_values)
 
 def update(request, start=None, fetch=None):
+    """Update DB with beers from saucer site starting with index (start) and
+    update no more than (fetch) number of beers"""
+
     if request.method == 'GET':
         ids = []
         ii = 0
@@ -145,14 +160,14 @@ def update(request, start=None, fetch=None):
                         curr_beer.avail = True
                         curr_beer.date = datetime.date.today()
                         curr_beer.save()
+                        added += 1
                 else:
                     b = Beer(name=_name, type=_type, avail=True,
                                 style=det['Style:'], descr=det['Description:'])
                     b.save()
+                    added += 1
                 jj += 1
 
-            # FIXME: Incorrect counting now b/c we don't always add
-            added += num_details
             ii += skip
             ids = []
 
@@ -161,10 +176,12 @@ def update(request, start=None, fetch=None):
                             'start' : start, 'requested' : fetch}
         return render_to_response('update.html', template_values)
 
-def brew_detail(request, b):
+def brew_detail(request, req_beer):
+    """Show detailed information about requested beer"""
+
     if request.method == 'GET':
         try:
-            beer = Beer.objects.get(id=b)
+            beer = Beer.objects.get(id=req_beer)
         except Beer.DoesNotExist:
             beer = None
 
@@ -172,22 +189,25 @@ def brew_detail(request, b):
         return render_to_response('beer_details.html', template_values)
 
 def search(request, style=None):
+    """Search all available beers given style and/or beer name"""
+
+    # Request is for a given style or list of all styles
     if request.method == 'GET':
         if style is not None and len(style) > 0:
 
-            # FIXME: Un-urlize the string
+            # Un-urlize the string
             style = re.sub(r'%20', ' ', style)
             style = re.sub(r'%28', '(', style)
             style = re.sub(r'%29', ')', style)
 
-            # Find all the styles by creating a set from all beers b/c
-            # app engine won't let us grab just this column from a table
+            # Find all styles by creating a set from all beers b/c can't find
+            # way to bring back single column
             beers = Beer.objects.filter(style=style, avail=True).order_by("name")
 
             template_values = {'beers' : beers, 'search' : style}
             return render_to_response('beers.html', template_values)
 
-        # Use a list to preserve ordering
+        # Use list to preserve ordering
         styles = []
         tmp = Beer.objects.all()
 
@@ -199,13 +219,9 @@ def search(request, style=None):
         template_values = {'styles' : styles}
         return render_to_response('search.html', template_values)
 
+    # Request is for given beer by name
     else:
         name = request.POST.get('name', None)
-
-        #if name is None or not len(name):
-        #    self.redirect("/search")
-        #    return
-
         beers = Beer.objects.filter(name=name)
 
         template_values = {'beers' : beers, 'requested' : name}
