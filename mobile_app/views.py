@@ -8,6 +8,7 @@ from django.shortcuts import render_to_response
 from models import Beer
 from saucer_api.saucer import Saucer
 
+
 def __get_current_week():
     """Find start/end dates of current week, Monday - Sunday (inclusive) and
     return as tuple"""
@@ -21,29 +22,35 @@ def __get_current_week():
     end = start + datetime.timedelta(days=6)
     return (start, end)
 
+
 def type_handler(request, req_type):
     """Find all beers with serving type equal to 'req_type' and display"""
 
     if request.method == 'GET':
         beers = Beer.objects.filter(type=req_type, avail=True).order_by("name")
-        template_values = {'beers' : beers, 'type' : req_type}
+        template_values = {'beers': beers, 'type': req_type}
         return render_to_response('type.html', template_values)
+
 
 def can(request):
     """Show all can beers"""
     return type_handler(request, "Can")
 
+
 def cask(request):
     """Show all cask beers"""
     return type_handler(request, "Cask")
+
 
 def draft(request):
     """Show all draft beers"""
     return type_handler(request, "Draft")
 
+
 def bottle(request):
     """Show all bottle beers"""
     return type_handler(request, "Bottle")
+
 
 def new(request):
     """Show all beers that were first available during current week"""
@@ -53,8 +60,9 @@ def new(request):
         beers = Beer.objects.filter(date__range=(start, end),
                                     avail=True).order_by("name")
 
-        template_values = {'beers' : beers, 'type' : 'New'}
+        template_values = {'beers': beers, 'type': 'New'}
         return render_to_response('type.html', template_values)
+
 
 def retired(request):
     """Show all beers that were discontinued/retired during current week"""
@@ -64,8 +72,9 @@ def retired(request):
         beers = Beer.objects.filter(date__range=(start, end),
                                     avail=False).order_by("name")
 
-        template_values = {'beers' : beers, 'type' : 'Retired'}
+        template_values = {'beers': beers, 'type': 'Retired'}
         return render_to_response('type.html', template_values)
+
 
 def index(request):
     """Show all currently available beers sorted by serving type"""
@@ -82,8 +91,9 @@ def index(request):
         beers['cans'] = cans
         beers['casks'] = casks
 
-        template_values = {'beers' : beers}
+        template_values = {'beers': beers}
         return render_to_response('index.html', template_values)
+
 
 def retire(request):
     """Retire all beers currently available in our db and not saucer site"""
@@ -109,6 +119,7 @@ def retire(request):
 
         template_values = {'retired': retired_beers}
         return render_to_response('retire.html', template_values)
+
 
 def update(request, start=None, fetch=None):
     """Update DB with beers from saucer site starting with index (start) and
@@ -171,10 +182,11 @@ def update(request, start=None, fetch=None):
             ii += skip
             ids = []
 
-        template_values = {'fetch' : saucer.fetch, 'san' : saucer.san,
-                            'details' : saucer.create_details, 'added' : added,
-                            'start' : start, 'requested' : fetch}
+        template_values = {'fetch': saucer.fetch, 'san': saucer.san,
+                            'details': saucer.create_details, 'added': added,
+                            'start': start, 'requested': fetch}
         return render_to_response('update.html', template_values)
+
 
 def brew_detail(request, req_beer):
     """Show detailed information about requested beer"""
@@ -185,8 +197,9 @@ def brew_detail(request, req_beer):
         except Beer.DoesNotExist:
             beer = None
 
-        template_values = {'beer' : beer}
+        template_values = {'beer': beer}
         return render_to_response('beer_details.html', template_values)
+
 
 def search(request, style=None):
     """Search all available beers given style and/or beer name"""
@@ -202,9 +215,10 @@ def search(request, style=None):
 
             # Find all styles by creating a set from all beers b/c can't find
             # way to bring back single column
-            beers = Beer.objects.filter(style=style, avail=True).order_by("name")
+            beers = Beer.objects.filter(style=style,
+                                        avail=True).order_by("name")
 
-            template_values = {'beers' : beers, 'search' : style}
+            template_values = {'beers': beers, 'search': style}
             return render_to_response('beers.html', template_values)
 
         # Use list to preserve ordering
@@ -216,7 +230,7 @@ def search(request, style=None):
 
         styles = list(set(styles))
         styles.sort()
-        template_values = {'styles' : styles}
+        template_values = {'styles': styles}
         return render_to_response('search.html', template_values)
 
     # Request is for given beer by name
@@ -224,5 +238,5 @@ def search(request, style=None):
         name = request.POST.get('name', None)
         beers = Beer.objects.filter(name=name)
 
-        template_values = {'beers' : beers, 'requested' : name}
+        template_values = {'beers': beers, 'requested': name}
         return render_to_response('beers.html', template_values)
