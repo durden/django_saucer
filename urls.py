@@ -7,17 +7,17 @@ from django.conf import settings
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    ('^$', Index),
-    (r'^update/(\d+)/(\d+)', Update),
-    (r'^retire/', Retire),
-    (r'^beer/(.*)', BrewDetail),
-    (r'^search/*(.*)', Search),
-    (r'^new/', New),
-    (r'^retired/', Retired),
-    (r'^cask/', Cask),
-    (r'^can/', Can),
-    (r'^bottle/', Bottle),
-    (r'^draft/', Draft),
+    ('^$', index),
+    (r'^update/(\d+)/(\d+)', update),
+    (r'^retire/', retire),
+    (r'^beer/(.*)', brew_detail),
+    (r'^search/*(.*)', search),
+    (r'^new/', new),
+    (r'^retired/', retired),
+    (r'^cask/', cask),
+    (r'^can/', can),
+    (r'^bottle/', bottle),
+    (r'^draft/', draft),
 
     # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),

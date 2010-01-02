@@ -18,25 +18,25 @@ def __getCurrentWeek():
     end = start + datetime.timedelta(days=6)
     return (start, end)
 
-def TypeHandler(request, type):
+def type_handler(request, type):
     if request.method == 'GET':
         beers = Beer.objects.filter(type=type, avail=True).order_by("name")
         template_values = {'beers' : beers, 'type' : type}
         return render_to_response('type.html', template_values)
 
-def Can(request):
-    return TypeHandler(request, "Can")
+def can(request):
+    return type_handler(request, "Can")
 
-def Cask(request):
-    return TypeHandler(request, "Cask")
+def cask(request):
+    return type_handler(request, "Cask")
 
-def Draft(request):
-    return TypeHandler(request, "Draft")
+def draft(request):
+    return type_handler(request, "Draft")
 
-def Bottle(request):
-    return TypeHandler(request, "Bottle")
+def bottle(request):
+    return type_handler(request, "Bottle")
 
-def New(request):
+def new(request):
     if request.method == 'GET':
         start, end = __getCurrentWeek()
         beers = Beer.objects.filter(date__range=(start, end),
@@ -45,7 +45,7 @@ def New(request):
         template_values = {'beers' : beers, 'type' : 'New'}
         return render_to_response('type.html', template_values)
 
-def Retired(request):
+def retired(request):
     x = 1
     if request.method == 'GET':
         start, end = __getCurrentWeek()
@@ -55,7 +55,7 @@ def Retired(request):
         template_values = {'beers' : beers, 'type' : 'Retired'}
         return render_to_response('type.html', template_values)
 
-def Index(request):
+def index(request):
     if request.method == 'GET':
         drafts = Beer.objects.filter(type="Draft", avail=True).order_by("name")
         bottles = Beer.objects.filter(type="Bottle", avail=True).order_by("name")
@@ -73,7 +73,7 @@ def Index(request):
         # FIXME: This template sucks b/c it has 4 loops that are duplicates
         return render_to_response('index.html', template_values)
 
-def Retire(request):
+def retire(request):
     # Get all beers from saucer site and compare them with currently available
     # beers from our db
     saucer = Saucer()
@@ -98,7 +98,7 @@ def Retire(request):
     template_values = {'retired': retired}
     return render_to_response('retire.html', template_values)
 
-def Update(request, start=None, fetch=None):
+def update(request, start=None, fetch=None):
     if request.method == 'GET':
         ids = []
         ii = 0
@@ -161,7 +161,7 @@ def Update(request, start=None, fetch=None):
                             'start' : start, 'requested' : fetch}
         return render_to_response('update.html', template_values)
 
-def BrewDetail(request, b):
+def brew_detail(request, b):
     if request.method == 'GET':
         try:
             beer = Beer.objects.get(id=b)
@@ -171,7 +171,7 @@ def BrewDetail(request, b):
         template_values = {'beer' : beer}
         return render_to_response('beer_details.html', template_values)
 
-def Search(request, style=None):
+def search(request, style=None):
     if request.method == 'GET':
         if style is not None and len(style) > 0:
 
