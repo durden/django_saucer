@@ -20,7 +20,7 @@ def __getCurrentWeek():
 
 def TypeHandler(request, type):
     if request.method == 'GET':
-        beers = Beer.objects.filter(type=type, avail=True)
+        beers = Beer.objects.filter(type=type, avail=True).order_by("name")
         template_values = {'beers' : beers, 'type' : type}
         return render_to_response('type.html', template_values)
 
