@@ -16,7 +16,7 @@
     {% endfor %}
 
     {% if not beers %}
-        <p>Sorry couldn't find {{requested}}. Search again.</p>
+        <p>Sorry couldn't find {{requested}}. <a href="/search">Search again</a>.</p>
     {% endif %}
 
 {% endblock %}
