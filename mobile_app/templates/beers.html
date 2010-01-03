@@ -1,22 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{ search }} Beers</h1>
-    {% for beer in beers %}
-        {% if forloop.first %}
-            <ul>
-        {% endif %}
-
-        <li><a href="/beer/{{ beer.id }}">{{ beer.name }}</a></li>
-
-        {% if forloop.last %}
-            </ul>
-        {% endif %}
-
-    {% endfor %}
-
     {% if not beers %}
-        <p>Sorry couldn't find {{requested}}. <a href="/search">Search again</a>.</p>
+        <h1>Results</h1>
+        <p>Sorry couldn't find {{search}}. <a href="/search">Search again</a>.</p>
+    {% else %}
+        <h1>{{ search }} Beers</h1>
+        {% for beer in beers %}
+            {% if forloop.first %}
+                <ul>
+            {% endif %}
+
+            <li><a href="/beer/{{ beer.id }}">{{ beer.name }}</a></li>
+
+            {% if forloop.last %}
+                </ul>
+            {% endif %}
+        {% endfor %}
     {% endif %}
+
 
 {% endblock %}

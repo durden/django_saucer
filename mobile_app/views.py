@@ -238,5 +238,5 @@ def search(request, style=None):
         name = request.POST.get('name', None)
         beers = Beer.objects.filter(name=name)
 
-        template_values = {'beers': beers, 'requested': name}
+        template_values = {'beers': beers, 'search': name}
         return render_to_response('beers.html', template_values)
