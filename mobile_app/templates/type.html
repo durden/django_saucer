@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{ type }} Beers</h1>
+    <h1>{{ type }} Beers </h1>
+
+    {% if start and end %}
+        <h2>{{start|date:"F d Y"}} - {{end|date:"F d Y"}}</h2>
+    {% endif %}
+
     {% for beer in beers %}
         {% if forloop.first %}
             <ul>

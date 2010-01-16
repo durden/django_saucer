@@ -60,7 +60,8 @@ def new(request):
         beers = Beer.objects.filter(date__range=(start, end),
                                     avail=True).order_by("name")
 
-        template_values = {'beers': beers, 'type': 'New'}
+        template_values = {'beers': beers, 'type': 'New', 'start': start,
+                            'end': end}
         return render_to_response('type.html', template_values)
 
 
@@ -72,7 +73,7 @@ def retired(request):
         beers = Beer.objects.filter(date__range=(start, end),
                                     avail=False).order_by("name")
 
-        template_values = {'beers': beers, 'type': 'Retired'}
+        template_values = {'beers': beers, 'type': 'Retired', 'start': start, 'end': end}
         return render_to_response('type.html', template_values)
 
 
