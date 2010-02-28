@@ -9,7 +9,7 @@ from models import Beer
 from saucer_api.saucer import Saucer
 
 
-def __get_current_week():
+def _get_current_week():
     """Find start/end dates of current week, Monday - Sunday (inclusive) and
     return as tuple"""
 
@@ -21,6 +21,14 @@ def __get_current_week():
 
     end = start + datetime.timedelta(days=6)
     return (start, end)
+
+
+def _new_weekly_beers():
+    """Get new beers for current week"""
+    start, end = _get_current_week()
+    beers = Beer.objects.filter(date__range=(start, end),
+                                avail=True).order_by("name")
+    return beers
 
 
 def type_handler(request, req_type):
@@ -56,9 +64,8 @@ def new(request):
     """Show all beers that were first available during current week"""
 
     if request.method == 'GET':
-        start, end = __get_current_week()
-        beers = Beer.objects.filter(date__range=(start, end),
-                                    avail=True).order_by("name")
+        start, end = _get_current_week()
+        beers = _new_weekly_beers()
 
         template_values = {'beers': beers, 'type': 'New', 'start': start,
                             'end': end}
@@ -69,7 +76,7 @@ def retired(request):
     """Show all beers that were discontinued/retired during current week"""
 
     if request.method == 'GET':
-        start, end = __get_current_week()
+        start, end = _get_current_week()
         beers = Beer.objects.filter(date__range=(start, end),
                                     avail=False).order_by("name")
 
