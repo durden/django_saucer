@@ -6,6 +6,11 @@ from django.conf import settings
 # from django.contrib import admin
 # admin.autodiscover()
 
+from mobile_app.feeds import NewBeersFeed
+
+# Feeds
+feeds = {'new': NewBeersFeed,}
+
 urlpatterns = patterns('',
     ('^$', index),
     (r'^update/(\d+)/(\d+)', update),
@@ -18,6 +23,9 @@ urlpatterns = patterns('',
     (r'^can/', can),
     (r'^bottle/', bottle),
     (r'^draft/', draft),
+
+    url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed',
+        {'feed_dict': feeds}, name='feeds'),
 
     # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),
