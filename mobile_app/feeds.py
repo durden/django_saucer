@@ -5,29 +5,40 @@ from django.contrib.syndication.feeds import Feed
 from views import _get_current_week, _weekly_beers
 
 
-class NewBeersFeed(Feed):
-    """Feed for new beers"""
+# Start/end of current week (for date-based feeds)
+START_WEEK, END_WEEK = _get_current_week()
 
+
+class BeerFeed(Feed):
+    """Generic class for beer beeds"""
+
+    # Standard templates
     title_template = "feeds/beer_title.html"
     description_template = "feeds/beer_description.html"
 
-    start, end = _get_current_week()
-
-    title = "New Saucer beers for %s - %s" % (start, end)
+    # Standard RSS feed requirements
     link = "/"
-    description = "Newest beers for week"
+    title = "Saucer Beers"
+    description = "Saucer Beers"
+
+    def items(self):
+        """Return list of beers to show in feed"""
+        pass
+
+class NewBeersFeed(BeerFeed):
+    """Feed for new beers"""
+
+    title = "New Saucer beers for %s - %s" % (START_WEEK, END_WEEK)
+    description = "New beers for week"
 
     def items(self):
         """Return new beers"""
         return  _weekly_beers(avail=True).order_by('-type')
 
-class RetiredBeersFeed(Feed):
+class RetiredBeersFeed(BeerFeed):
     """Feed for retired beers"""
 
-    start, end = _get_current_week()
-
-    title = "Retired Saucer beers for %s - %s" % (start, end)
-    link = "/"
+    title = "Retired Saucer beers for %s - %s" % (START_WEEK, END_WEEK)
     description = "Retired beers for week"
 
     def items(self):
