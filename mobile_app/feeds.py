@@ -1,8 +1,8 @@
 """Feeds"""
 
-from views import _get_current_week, _weekly_beers
-
 from django.contrib.syndication.feeds import Feed
+
+from views import _get_current_week, _weekly_beers
 
 
 class NewBeersFeed(Feed):
