@@ -9,8 +9,7 @@ class Beer(models.Model):
     avail = models.BooleanField()
 
     def __str__(self):
-        return "%s (%s): Style:%s Avail:%s" % (self.name, self.type,
-                                            self.style, self.avail)
+        return "%s (%s): " % (self.name, self.type)
 
     def get_absolute_url(self):
         """URL for object"""

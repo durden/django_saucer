@@ -16,4 +16,4 @@ class NewBeersFeed(Feed):
 
     def items(self):
         """Return new beers"""
-        return  _new_weekly_beers()
+        return  _new_weekly_beers().order_by('-type')
