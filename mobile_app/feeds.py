@@ -8,6 +8,9 @@ from views import _get_current_week, _weekly_beers
 class NewBeersFeed(Feed):
     """Feed for new beers"""
 
+    title_template = "feeds/beer_title.html"
+    description_template = "feeds/beer_description.html"
+
     start, end = _get_current_week()
 
     title = "New Saucer beers for %s - %s" % (start, end)
