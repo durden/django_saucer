@@ -23,11 +23,11 @@ def _get_current_week():
     return (start, end)
 
 
-def _new_weekly_beers():
-    """Get new beers for current week"""
+def _weekly_beers(avail):
+    """Get new or retired beers for current week"""
     start, end = _get_current_week()
     beers = Beer.objects.filter(date__range=(start, end),
-                                avail=True).order_by("name")
+                                avail=avail).order_by("name")
     return beers
 
 
@@ -65,7 +65,7 @@ def new(request):
 
     if request.method == 'GET':
         start, end = _get_current_week()
-        beers = _new_weekly_beers()
+        beers = _weekly_beers(avail=True)
 
         template_values = {'beers': beers, 'type': 'New', 'start': start,
                             'end': end}
@@ -77,10 +77,10 @@ def retired(request):
 
     if request.method == 'GET':
         start, end = _get_current_week()
-        beers = Beer.objects.filter(date__range=(start, end),
-                                    avail=False).order_by("name")
+        beers = _weekly_beers(avail=False)
 
-        template_values = {'beers': beers, 'type': 'Retired', 'start': start, 'end': end}
+        template_values = {'beers': beers, 'type': 'Retired', 'start': start,
+                           'end': end}
         return render_to_response('type.html', template_values)
 
 

@@ -1,6 +1,6 @@
 """Feeds"""
 
-from views import _get_current_week, _new_weekly_beers
+from views import _get_current_week, _weekly_beers
 
 from django.contrib.syndication.feeds import Feed
 
@@ -16,4 +16,17 @@ class NewBeersFeed(Feed):
 
     def items(self):
         """Return new beers"""
-        return  _new_weekly_beers().order_by('-type')
+        return  _weekly_beers(avail=True).order_by('-type')
+
+class RetiredBeersFeed(Feed):
+    """Feed for retired beers"""
+
+    start, end = _get_current_week()
+
+    title = "Retired Saucer beers for %s - %s" % (start, end)
+    link = "/"
+    description = "Retired beers for week"
+
+    def items(self):
+        """Return retired beers"""
+        return  _weekly_beers(avail=False).order_by('-type')

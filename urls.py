@@ -6,10 +6,10 @@ from django.conf import settings
 # from django.contrib import admin
 # admin.autodiscover()
 
-from mobile_app.feeds import NewBeersFeed
+from mobile_app.feeds import NewBeersFeed, RetiredBeersFeed
 
 # Feeds
-feeds = {'new': NewBeersFeed,}
+feeds = {'new': NewBeersFeed, 'retired': RetiredBeersFeed}
 
 urlpatterns = patterns('',
     ('^$', index),
