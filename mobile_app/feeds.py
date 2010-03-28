@@ -2,11 +2,7 @@
 
 from django.contrib.syndication.feeds import Feed
 
-from views import _get_current_week, _weekly_beers
-
-
-# Start/end of current week (for date-based feeds)
-START_WEEK, END_WEEK = _get_current_week()
+from views import _weekly_beers
 
 
 class BeerFeed(Feed):
@@ -21,15 +17,11 @@ class BeerFeed(Feed):
     title = "Saucer Beers"
     description = "Saucer Beers"
 
-    def items(self):
-        """Return list of beers to show in feed"""
-        pass
-
 class NewBeersFeed(BeerFeed):
     """Feed for new beers"""
 
-    title = "New Saucer beers for %s - %s" % (START_WEEK, END_WEEK)
-    description = "New beers for week"
+    title = "New Beers"
+    description = "New beers at Houston Flying Saucer"
 
     def items(self):
         """Return new beers"""
@@ -38,8 +30,8 @@ class NewBeersFeed(BeerFeed):
 class RetiredBeersFeed(BeerFeed):
     """Feed for retired beers"""
 
-    title = "Retired Saucer beers for %s - %s" % (START_WEEK, END_WEEK)
-    description = "Retired beers for week"
+    title = "Retired beers"
+    description = "Retired beers at Houston Flying Saucer"
 
     def items(self):
         """Return retired beers"""
