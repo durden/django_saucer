@@ -1,10 +1,12 @@
 Simple Django application to view current beers at the Flying Saucer Houston location.  The application depends on my custom saucer api for getting the beers, etc.  Message me if you would like to see it and/or use it.
 
 Required packages:
+
     - Django 1.0.4 final
     - Python 2.5
 
 Nice to have packages:
+
     - Pylint 0.19.0
 
 This project uses the pylint python package for code analysis and to ensure
